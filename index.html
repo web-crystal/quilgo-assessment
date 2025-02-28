@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Marketing Data Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- DataTables CSS -->
+    <link
+      href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Custom CSS -->
+    <style>
+      body {
+        background-color: #f0f2f5;
+      }
+
+      .chart-container {
+        position: relative;
+        height: 50vh;
+        margin-bottom: 30px;
+      }
+
+      .filter-section {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .card-header {
+        background-color: #f1f8ff;
+        font-weight: bold;
+        padding: 12px 20px;
+      }
+
+      .table-responsive {
+        margin-bottom: 30px;
+      }
+
+      .metric-card {
+        text-align: center;
+        padding: 15px;
+      }
+
+      .metric-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .metric-title {
+        color: #6c757d;
+      }
+
+      /* Table styles to match screenshot */
+      #performanceTable thead th {
+        background-color: #42bff5;
+        color: white;
+        font-weight: normal;
+        text-align: center;
+      }
+
+      .platform-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      /* Network column styling */
+      #performanceTable td.network-cell {
+        position: relative;
+        padding-left: 24px;
+      }
+
+      .expand-btn {
+        cursor: pointer;
+        color: green;
+        margin-right: 8px;
+      }
+
+      /* Styling for LTV metrics */
+      .ltv-value {
+        font-weight: bold;
+      }
+
+      .ltv-percent {
+        color: #6c757d;
+        font-size: 0.9em;
+      }
+
+      /* Styling for child rows */
+      tr.child-row {
+        background-color: #f5f5f5;
+      }
+
+      tr.child-row td {
+        border-top: none;
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .breadcrumb {
+        background-color: transparent;
+        padding: 0.5rem 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .breadcrumb-item + .breadcrumb-item::before {
+        content: ">";
+      }
+
+      .page-header {
+        background-color: #e9ecef;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .toggle-switch {
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+      }
+
+      .toggle-track {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+        background-color: #ccc;
+        border-radius: 34px;
+        margin: 0 10px;
+      }
+
+      .toggle-track.active {
+        background-color: #2196f3;
+      }
+
+      .toggle-thumb {
+        position: absolute;
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        border-radius: 50%;
+        transition: 0.4s;
+      }
+
+      .toggle-track.active .toggle-thumb {
+        transform: translateX(26px);
+      }
+
+      /* Search field */
+      .search-container {
+        max-width: 250px;
+        margin-bottom: 15px;
+      }
+
+      #tableSearch {
+        border-radius: 4px;
+      }
+
+      /* Edit metrics button */
+      .edit-metrics-btn {
+        background-color: #ff4081;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid py-4">
+      <div class="page-header">
+        <h1 class="mb-0">Report Overview</h1>
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Report</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Overview</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h2 class="mb-4">Network</h2>
+
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="search-container">
+              <div class="input-group">
+                <span class="input-group-text">Search:</span>
+                <input type="text" id="tableSearch" class="form-control" />
+              </div>
+            </div>
+            <button class="edit-metrics-btn">EDIT METRICS</button>
+          </div>
+
+          <!-- Table Section -->
+          <div class="table-responsive">
+            <table id="performanceTable" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Network</th>
+                  <th>Spend</th>
+                  <th>CPI</th>
+                  <th>LTV90</th>
+                  <th>Installs</th>
+                  <th>ltv0u</th>
+                  <th>ltv1u</th>
+                  <th>ltv2u</th>
+                  <th>ltv3u</th>
+                  <th>ltv7u</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Data will be populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="row">
+        <!-- Spend Chart -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h4 class="card-title mb-0">Spend</h4>
+                <div class="toggle-switch">
+                  <span>Stack</span>
+                  <div class="toggle-track active" id="spendStackToggle">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                  <span>UnStack</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="spendChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Revenue Chart -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
+                <h4 class="card-title mb-0">Daily Revenue</h4>
+                <div class="toggle-switch">
+                  <span>Stack</span>
+                  <div class="toggle-track active" id="revenueStackToggle">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                  <span>UnStack</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
